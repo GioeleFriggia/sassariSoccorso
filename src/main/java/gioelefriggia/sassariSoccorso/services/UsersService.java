@@ -1,12 +1,15 @@
 package gioelefriggia.sassariSoccorso.services;
 
 
+import gioelefriggia.sassariSoccorso.entities.Role;
 import gioelefriggia.sassariSoccorso.entities.User;
 import gioelefriggia.sassariSoccorso.exceptions.BadRequestException;
 import gioelefriggia.sassariSoccorso.exceptions.NotFoundException;
-import gioelefriggia.sassariSoccorso.payloads.NewUserDTO;
+import gioelefriggia.sassariSoccorso.payloads.UserRegistrationDTO;
 import gioelefriggia.sassariSoccorso.repositories.UsersDAO;
 import gioelefriggia.sassariSoccorso.tools.MailgunSender;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,19 +30,38 @@ public class UsersService {
     private MailgunSender mailgunSender;
 
     public Page<User> getUsers(int page, int size, String sortBy) {
+        if (size > 100) size = 100;
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
         return this.usersDAO.findAll(pageable);
     }
 
-    public User save(NewUserDTO body) {
-        this.usersDAO.findByEmail(body.email()).ifPresent(user -> {
-            throw new BadRequestException("The email " + user.getEmail() + " is already in use!");
-        });
-        User newUser = new User(body.name(), body.surname(), body.email(), bcrypt.encode(body.password()),
-                "https://ui-avatars.com/api/?name=" + body.name() + "+" + body.surname());
-        mailgunSender.sendRegistrationEmail(newUser);
-        return usersDAO.save(newUser);
+    private static final Logger log = LoggerFactory.getLogger(UsersService.class);
+
+    public User save(UserRegistrationDTO registrationDTO) throws BadRequestException {
+        try {
+            this.usersDAO.findByEmail(registrationDTO.getEmail()).ifPresent(user -> {
+                throw new BadRequestException("L'email " + user.getEmail() + " è già in uso!");
+            });
+
+            User newUser = new User();
+            newUser.setName(registrationDTO.getName());
+            newUser.setSurname(registrationDTO.getSurname());
+            newUser.setEmail(registrationDTO.getEmail());
+            newUser.setPassword(bcrypt.encode(registrationDTO.getPassword()));
+            newUser.setBirthdate(registrationDTO.getBirthdate());
+            newUser.setResidence(registrationDTO.getResidence());
+            newUser.setCity(registrationDTO.getCity());
+            newUser.setMembershipNumber(registrationDTO.getMembershipNumber());
+            newUser.setRole(registrationDTO.getRole() != null ? registrationDTO.getRole() : Role.USER);  // Imposta il ruolo di default se non specificato
+
+            mailgunSender.sendRegistrationEmail(newUser);
+            return usersDAO.save(newUser);
+        } catch (Exception e) {
+            log.error("Error saving user: ", e);
+            throw e;
+        }
     }
+
 
     public User findById(UUID userId) {
         return this.usersDAO.findById(userId).orElseThrow(() -> new NotFoundException(userId));
@@ -61,7 +83,7 @@ public class UsersService {
     }
 
     public User findByEmail(String email) {
-        return usersDAO.findByEmail(email).orElseThrow(() -> new NotFoundException("User with email " + email + " not found!"));
+        return usersDAO.findByEmail(email).orElseThrow(() -> new NotFoundException("Utente con email " + email + " non trovato!"));
     }
-}
 
+}

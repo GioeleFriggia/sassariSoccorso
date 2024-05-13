@@ -1,5 +1,6 @@
 package gioelefriggia.sassariSoccorso.repositories;
 
+
 import gioelefriggia.sassariSoccorso.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 

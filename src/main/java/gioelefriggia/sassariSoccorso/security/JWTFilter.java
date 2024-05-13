@@ -1,5 +1,6 @@
 package gioelefriggia.sassariSoccorso.security;
 
+
 import gioelefriggia.sassariSoccorso.entities.User;
 import gioelefriggia.sassariSoccorso.exceptions.UnauthorizedException;
 import gioelefriggia.sassariSoccorso.services.UsersService;

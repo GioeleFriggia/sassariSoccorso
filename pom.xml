@@ -8,8 +8,8 @@
         <version>3.2.4</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>riccardogulin</groupId>
-    <artifactId>u5d11</artifactId>
+    <groupId>gioelefriggia</groupId>
+    <artifactId>sassariSoccorso</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>u5d11</name>
     <description>Demo project for Spring Boot</description>

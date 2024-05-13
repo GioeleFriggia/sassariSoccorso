@@ -1,6 +1,5 @@
 package gioelefriggia.sassariSoccorso.exceptions;
 
-
 import lombok.Getter;
 import org.springframework.validation.ObjectError;
 
@@ -15,7 +14,7 @@ public class BadRequestException extends RuntimeException {
     }
 
     public BadRequestException(List<ObjectError> errorsList) {
-        super("There have been validation errors in the payload!");
+        super("Ci sono stati errori di validazione nel payload!");
         this.errorsList = errorsList;
     }
 }

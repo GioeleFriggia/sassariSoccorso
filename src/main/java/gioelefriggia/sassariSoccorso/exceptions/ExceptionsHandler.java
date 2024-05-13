@@ -1,6 +1,5 @@
 package gioelefriggia.sassariSoccorso.exceptions;
 
-
 import gioelefriggia.sassariSoccorso.payloads.ErrorsResponseDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
@@ -11,7 +10,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
-@RestControllerAdvice
+@RestControllerAdvice // <-- Controller specifico per gestione eccezioni
+// Questa classe mi serve per centralizzare la gestione delle eccezioni
+// Praticamente è come creare quindi un unico punto all'interno di tutta l'applicazione
+// in cui "catturare" le eccezioni. Le eccezioni possono provenire dai controllers, dai services, o
+// anche da altre parti; ma questo non importa molto perché comunque arriveranno qua.
+// Questo ci permetterà di gestire ogni eccezione inviando una risposta adatta per tale
+// problematica, con tanto di status code corretto.
 public class ExceptionsHandler {
 
     @ExceptionHandler(BadRequestException.class)
@@ -19,7 +24,7 @@ public class ExceptionsHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST) // 400
     public ErrorsResponseDTO handleBadRequest(BadRequestException ex) {
         if (ex.getErrorsList() != null) {
-          
+            // Se c'è la lista degli errori, allora manderemo una risposta contenente la lista degli errori
             String message = ex.getErrorsList().stream()
                     .map(objectError -> objectError.getDefaultMessage())
                     .collect(Collectors.joining(". "));

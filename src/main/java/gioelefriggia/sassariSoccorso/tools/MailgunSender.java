@@ -1,5 +1,6 @@
 package gioelefriggia.sassariSoccorso.tools;
 
+
 import gioelefriggia.sassariSoccorso.entities.User;
 import kong.unirest.HttpResponse;
 import kong.unirest.JsonNode;
@@ -20,7 +21,7 @@ public class MailgunSender {
     public void sendRegistrationEmail(User recipient) {
         HttpResponse<JsonNode> response = Unirest.post("https://api.mailgun.net/v3/" + this.domainName + "/messages")
                 .basicAuth("api", this.apiKey)
-                .queryString("from", "riccardo.gulin@gmail.com")
+                .queryString("from", "giofriggia@gmail.com")
                 .queryString("to", recipient.getEmail())
                 .queryString("subject", "Registrazione Completata!")
                 .queryString("text", "Complimenti " + recipient.getName() + " per esserti registrato!")
@@ -28,4 +29,5 @@ public class MailgunSender {
 
         System.out.println(response.getBody());
     }
+
 }

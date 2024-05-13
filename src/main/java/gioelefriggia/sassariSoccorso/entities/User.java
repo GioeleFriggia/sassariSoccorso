@@ -1,6 +1,5 @@
 package gioelefriggia.sassariSoccorso.entities;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -31,6 +30,10 @@ public class User implements UserDetails {
     private String email;
     private String password;
     private String avatarURL;
+    private String birthdate;
+    private String residence;
+    private String city;
+    private String membershipNumber;
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -40,7 +43,12 @@ public class User implements UserDetails {
         this.email = email;
         this.password = password;
         this.avatarURL = avatarURL;
-        this.role = Role.USER; // Default role is USER
+        this.role = Role.USER;
+    }
+
+    // Metodo per impostare il nome utente
+    public void setUsername(String username) {
+        this.email = username;
     }
 
     @Override

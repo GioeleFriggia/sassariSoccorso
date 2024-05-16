@@ -38,4 +38,8 @@ public class AuthService {
         System.out.println("Password matched. Generating token.");
         return jwtTools.createToken(user);
     }
+
+    public String generateToken(User user) {
+        return jwtTools.createToken(user);
+    }
 }

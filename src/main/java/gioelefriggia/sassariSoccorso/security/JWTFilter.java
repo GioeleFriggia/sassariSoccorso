@@ -12,7 +12,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
-import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -30,30 +29,26 @@ public class JWTFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         String authHeader = request.getHeader("Authorization");
-
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String accessToken = authHeader.substring(7);
             try {
-                System.out.println("Extracting user ID from token");
                 String userId = jwtTools.extractIdFromToken(accessToken);
                 User currentUser = usersDAO.findById(UUID.fromString(userId))
                         .orElseThrow(() -> new UsernameNotFoundException("User not found with ID: " + userId));
-
-                System.out.println("User found: " + currentUser.getEmail());
                 Authentication authentication = new UsernamePasswordAuthenticationToken(currentUser, null, currentUser.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             } catch (Exception ex) {
-                System.out.println("Authentication failed: " + ex.getMessage());
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                return; // Stop further processing if the authentication failed
+                response.getWriter().write("Unauthorized: " + ex.getMessage());
+                return; // Stop further processing
             }
         }
-
         filterChain.doFilter(request, response);
     }
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        return new AntPathMatcher().match("/auth/**", request.getServletPath());
+        // Do not apply filter for login and registration endpoints
+        return request.getServletPath().startsWith("/auth/login") || request.getServletPath().startsWith("/auth/register");
     }
 }

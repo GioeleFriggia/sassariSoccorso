@@ -21,12 +21,12 @@ public class AuthController {
     @Autowired
     private AuthService authService;
     @Autowired
-    private UsersService userService;
+    private UsersService usersService;
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody UserRegistrationDTO registrationDTO) {
         try {
-            User user = userService.save(registrationDTO);
+            User user = usersService.save(registrationDTO);
             String token = authService.generateToken(user);
 
             Map<String, Object> response = new HashMap<>();
@@ -46,7 +46,6 @@ public class AuthController {
         }
         return ResponseEntity.ok(currentUser);
     }
-
 
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody UserLoginDTO loginDTO) {

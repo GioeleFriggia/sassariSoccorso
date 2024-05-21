@@ -1,4 +1,3 @@
-// UsersController.java
 package gioelefriggia.sassariSoccorso.controllers;
 
 import gioelefriggia.sassariSoccorso.entities.User;
@@ -34,6 +33,4 @@ public class UsersController {
     public void findByIdAndDelete(@PathVariable UUID userId) {
         this.usersService.findByIdAndDelete(userId);
     }
-
-
 }

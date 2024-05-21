@@ -1,6 +1,5 @@
 package gioelefriggia.sassariSoccorso.repositories;
 
-
 import gioelefriggia.sassariSoccorso.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -11,5 +10,4 @@ public interface UsersDAO extends JpaRepository<User, UUID> {
     boolean existsByEmail(String email);
 
     Optional<User> findByEmail(String email);
-
 }

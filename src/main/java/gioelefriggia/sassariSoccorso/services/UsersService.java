@@ -1,6 +1,5 @@
 package gioelefriggia.sassariSoccorso.services;
 
-
 import gioelefriggia.sassariSoccorso.entities.Role;
 import gioelefriggia.sassariSoccorso.entities.User;
 import gioelefriggia.sassariSoccorso.exceptions.BadRequestException;
@@ -29,12 +28,6 @@ public class UsersService {
     @Autowired
     private MailgunSender mailgunSender;
 
-    public Page<User> getUsers(int page, int size, String sortBy) {
-        if (size > 100) size = 100;
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
-        return this.usersDAO.findAll(pageable);
-    }
-
     private static final Logger log = LoggerFactory.getLogger(UsersService.class);
 
     public User save(UserRegistrationDTO registrationDTO) throws BadRequestException {
@@ -52,7 +45,13 @@ public class UsersService {
             newUser.setResidence(registrationDTO.getResidence());
             newUser.setCity(registrationDTO.getCity());
             newUser.setMembershipNumber(registrationDTO.getMembershipNumber());
-            newUser.setRole(registrationDTO.getRole() != null ? registrationDTO.getRole() : Role.USER);  // Imposta il ruolo di default se non specificato
+
+            // Imposta il ruolo in base al DTO
+            if (registrationDTO.getRole() != null) {
+                newUser.setRole(registrationDTO.getRole());
+            } else {
+                newUser.setRole(Role.USER);  // Imposta sempre il ruolo a USER se non specificato
+            }
 
             mailgunSender.sendRegistrationEmail(newUser);
             return usersDAO.save(newUser);
@@ -61,7 +60,6 @@ public class UsersService {
             throw e;
         }
     }
-
 
     public User findById(UUID userId) {
         return this.usersDAO.findById(userId).orElseThrow(() -> new NotFoundException(userId));
@@ -82,8 +80,15 @@ public class UsersService {
         this.usersDAO.delete(found);
     }
 
-    public User findByEmail(String email) {
-        return usersDAO.findByEmail(email).orElseThrow(() -> new NotFoundException("Utente con email " + email + " non trovato!"));
+    public Page<User> getUsers(int page, int size, String sortBy) {
+        if (size > 100) size = 100;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+        return this.usersDAO.findAll(pageable);
     }
 
+    public User promoteToAdmin(UUID userId) {
+        User user = this.findById(userId);
+        user.setRole(Role.ADMIN);
+        return usersDAO.save(user);
+    }
 }

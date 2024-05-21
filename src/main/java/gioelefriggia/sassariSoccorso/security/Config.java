@@ -1,4 +1,3 @@
-// Config.java
 package gioelefriggia.sassariSoccorso.security;
 
 import org.springframework.context.annotation.Bean;
@@ -42,6 +41,7 @@ public class Config {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/api/checklistMezzo/**").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 

@@ -48,4 +48,14 @@ public class AdminController {
         Page<ChecklistMezzo> checklists = checklistMezzoService.getChecklists(page, size, sortBy);
         return ResponseEntity.ok(checklists);
     }
+
+    @DeleteMapping("/users/{userId}")
+    public ResponseEntity<?> deleteUser(@PathVariable UUID userId) {
+        try {
+            usersService.findByIdAndDelete(userId);
+            return ResponseEntity.ok("User deleted successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error deleting user: " + e.getMessage());
+        }
+    }
 }

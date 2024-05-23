@@ -27,7 +27,6 @@ public class UsersService {
     private PasswordEncoder bcrypt;
     @Autowired
     private MailgunSender mailgunSender;
-
     private static final Logger log = LoggerFactory.getLogger(UsersService.class);
 
     public User save(UserRegistrationDTO registrationDTO) throws BadRequestException {

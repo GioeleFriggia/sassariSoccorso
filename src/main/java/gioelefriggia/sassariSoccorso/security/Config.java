@@ -43,6 +43,7 @@ public class Config {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/api/checklistMezzo/**").permitAll()
+                        .requestMatchers("/api/checklistVanoSanitario/**").permitAll()  // Aggiungi questa linea
                         .requestMatchers("/admin/**").hasAuthority("ADMIN")
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

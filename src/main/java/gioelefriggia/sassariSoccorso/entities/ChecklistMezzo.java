@@ -63,6 +63,12 @@ public class ChecklistMezzo {
     @Column(name = "component_equipe")
     private String componenteqipe;
 
+    @Column(name = "first_name")
+    private String firstName;
+
+    @Column(name = "last_name")
+    private String lastName;
+
     // Getters and Setters
 
     public Long getId() {
@@ -207,5 +213,21 @@ public class ChecklistMezzo {
 
     public void setCabinFeatures(String cabinFeatures) {
         this.componenteqipe = cabinFeatures;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 }

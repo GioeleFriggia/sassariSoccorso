@@ -1,8 +1,10 @@
 package gioelefriggia.sassariSoccorso.controllers;
 
 import gioelefriggia.sassariSoccorso.entities.ChecklistMezzo;
+import gioelefriggia.sassariSoccorso.entities.ChecklistVanoSanitario;
 import gioelefriggia.sassariSoccorso.entities.User;
 import gioelefriggia.sassariSoccorso.services.ChecklistMezzoService;
+import gioelefriggia.sassariSoccorso.services.ChecklistVanoSanitarioService;
 import gioelefriggia.sassariSoccorso.services.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,6 +24,9 @@ public class AdminController {
 
     @Autowired
     private ChecklistMezzoService checklistMezzoService;
+
+    @Autowired
+    private ChecklistVanoSanitarioService checklistVanoSanitarioService;
 
     @PostMapping("/promote/{userId}")
     public ResponseEntity<?> promoteUserToAdmin(@PathVariable UUID userId) {
@@ -46,6 +51,14 @@ public class AdminController {
                                                                  @RequestParam(defaultValue = "10") int size,
                                                                  @RequestParam(defaultValue = "date") String sortBy) {
         Page<ChecklistMezzo> checklists = checklistMezzoService.getChecklists(page, size, sortBy);
+        return ResponseEntity.ok(checklists);
+    }
+
+    @GetMapping("/checklistVanoSanitario")
+    public ResponseEntity<Page<ChecklistVanoSanitario>> getAllChecklistVanoSanitario(@RequestParam(defaultValue = "0") int page,
+                                                                                     @RequestParam(defaultValue = "10") int size,
+                                                                                     @RequestParam(defaultValue = "date") String sortBy) {
+        Page<ChecklistVanoSanitario> checklists = checklistVanoSanitarioService.getChecklists(page, size, sortBy);
         return ResponseEntity.ok(checklists);
     }
 

@@ -7,8 +7,6 @@ import gioelefriggia.sassariSoccorso.exceptions.NotFoundException;
 import gioelefriggia.sassariSoccorso.payloads.UserRegistrationDTO;
 import gioelefriggia.sassariSoccorso.repositories.UsersDAO;
 import gioelefriggia.sassariSoccorso.tools.MailgunSender;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,41 +25,30 @@ public class UsersService {
     private PasswordEncoder bcrypt;
     @Autowired
     private MailgunSender mailgunSender;
-    private static final Logger log = LoggerFactory.getLogger(UsersService.class);
 
     public User save(UserRegistrationDTO registrationDTO) throws BadRequestException {
-        try {
-            this.usersDAO.findByEmail(registrationDTO.getEmail()).ifPresent(user -> {
-                throw new BadRequestException("L'email " + user.getEmail() + " è già in uso!");
-            });
+        usersDAO.findByEmail(registrationDTO.getEmail()).ifPresent(user -> {
+            throw new BadRequestException("L'email " + user.getEmail() + " è già in uso!");
+        });
 
-            User newUser = new User();
-            newUser.setName(registrationDTO.getName());
-            newUser.setSurname(registrationDTO.getSurname());
-            newUser.setEmail(registrationDTO.getEmail());
-            newUser.setPassword(bcrypt.encode(registrationDTO.getPassword()));
-            newUser.setBirthdate(registrationDTO.getBirthdate());
-            newUser.setResidence(registrationDTO.getResidence());
-            newUser.setCity(registrationDTO.getCity());
-            newUser.setMembershipNumber(registrationDTO.getMembershipNumber());
+        User newUser = new User();
+        newUser.setName(registrationDTO.getName());
+        newUser.setSurname(registrationDTO.getSurname());
+        newUser.setEmail(registrationDTO.getEmail());
+        newUser.setPassword(bcrypt.encode(registrationDTO.getPassword()));
+        newUser.setBirthdate(registrationDTO.getBirthdate());
+        newUser.setResidence(registrationDTO.getResidence());
+        newUser.setCity(registrationDTO.getCity());
+        newUser.setMembershipNumber(registrationDTO.getMembershipNumber());
 
-            // Imposta il ruolo in base al DTO
-            if (registrationDTO.getRole() != null) {
-                newUser.setRole(registrationDTO.getRole());
-            } else {
-                newUser.setRole(Role.USER);  // Imposta sempre il ruolo a USER se non specificato
-            }
+        newUser.setRole(registrationDTO.getRole() != null ? registrationDTO.getRole() : Role.USER);
 
-            mailgunSender.sendRegistrationEmail(newUser);
-            return usersDAO.save(newUser);
-        } catch (Exception e) {
-            log.error("Error saving user: ", e);
-            throw e;
-        }
+        mailgunSender.sendRegistrationEmail(newUser);
+        return usersDAO.save(newUser);
     }
 
     public User findById(UUID userId) {
-        return this.usersDAO.findById(userId).orElseThrow(() -> new NotFoundException(userId));
+        return usersDAO.findById(userId).orElseThrow(() -> new NotFoundException(userId));
     }
 
     public User findByIdAndUpdate(UUID userId, User modifiedUser) {
@@ -69,14 +56,20 @@ public class UsersService {
         found.setName(modifiedUser.getName());
         found.setSurname(modifiedUser.getSurname());
         found.setEmail(modifiedUser.getEmail());
-        found.setPassword(modifiedUser.getPassword());
-        found.setAvatarURL("https://ui-avatars.com/api/?name=" + modifiedUser.getName() + "+" + modifiedUser.getSurname());
-        return this.usersDAO.save(found);
+        found.setPassword(bcrypt.encode(modifiedUser.getPassword()));
+        found.setAvatarURL(modifiedUser.getAvatarURL());
+        return usersDAO.save(found);
     }
 
     public void findByIdAndDelete(UUID userId) {
         User found = this.findById(userId);
         this.usersDAO.delete(found);
+    }
+
+    public User updateUserAvatar(UUID userId, String imageUrl) {
+        User user = findById(userId);
+        user.setAvatarURL(imageUrl);
+        return usersDAO.save(user);
     }
 
     public Page<User> getUsers(int page, int size, String sortBy) {

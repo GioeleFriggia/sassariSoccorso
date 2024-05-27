@@ -174,7 +174,7 @@ public class ChecklistVanoSanitario {
     @Column(name = "note")
     private String note;
 
-    // Getters e Setters per tutti i campi
+    // Getters and Setters
 
     public Long getId() {
         return id;

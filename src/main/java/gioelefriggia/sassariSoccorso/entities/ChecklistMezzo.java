@@ -49,25 +49,22 @@ public class ChecklistMezzo {
     private boolean warningLights;
 
     @Column(name = "front_lights")
-    private String frontLights;
+    private boolean frontLights;
 
     @Column(name = "rear_lights")
-    private String rearLights;
+    private boolean rearLights;
 
     @Column(name = "right_side_lights")
-    private String rightSideLights;
+    private boolean rightSideLights;
 
     @Column(name = "left_side_lights")
-    private String leftSideLights;
+    private boolean leftSideLights;
 
-    @Column(name = "component_equipe")
-    private String componenteqipe;
+    @Column(name = "cabin_features")
+    private String cabinFeatures;
 
-    @Column(name = "first_name")
-    private String firstName;
-
-    @Column(name = "last_name")
-    private String lastName;
+    @Column(name = "notes")
+    private String notes;
 
     // Getters and Setters
 
@@ -175,59 +172,51 @@ public class ChecklistMezzo {
         this.warningLights = warningLights;
     }
 
-    public String getFrontLights() {
+    public boolean isFrontLights() {
         return frontLights;
     }
 
-    public void setFrontLights(String frontLights) {
+    public void setFrontLights(boolean frontLights) {
         this.frontLights = frontLights;
     }
 
-    public String getRearLights() {
+    public boolean isRearLights() {
         return rearLights;
     }
 
-    public void setRearLights(String rearLights) {
+    public void setRearLights(boolean rearLights) {
         this.rearLights = rearLights;
     }
 
-    public String getRightSideLights() {
+    public boolean isRightSideLights() {
         return rightSideLights;
     }
 
-    public void setRightSideLights(String rightSideLights) {
+    public void setRightSideLights(boolean rightSideLights) {
         this.rightSideLights = rightSideLights;
     }
 
-    public String getLeftSideLights() {
+    public boolean isLeftSideLights() {
         return leftSideLights;
     }
 
-    public void setLeftSideLights(String leftSideLights) {
+    public void setLeftSideLights(boolean leftSideLights) {
         this.leftSideLights = leftSideLights;
     }
 
     public String getCabinFeatures() {
-        return componenteqipe;
+        return cabinFeatures;
     }
 
     public void setCabinFeatures(String cabinFeatures) {
-        this.componenteqipe = cabinFeatures;
+        this.cabinFeatures = cabinFeatures;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getNotes() {
+        return notes;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 }

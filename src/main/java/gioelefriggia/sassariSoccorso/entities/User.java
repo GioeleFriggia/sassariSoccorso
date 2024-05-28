@@ -46,11 +46,6 @@ public class User implements UserDetails {
         this.role = Role.USER;
     }
 
-    // Metodo per impostare il nome utente
-    public void setUsername(String username) {
-        this.email = username;
-    }
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(this.role.name()));

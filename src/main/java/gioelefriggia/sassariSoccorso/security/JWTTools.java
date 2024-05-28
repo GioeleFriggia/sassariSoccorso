@@ -23,12 +23,12 @@ public class JWTTools {
 
     public String createToken(User user) {
         String token = Jwts.builder()
-                .setIssuedAt(new Date(System.currentTimeMillis())) // Data di emissione del token (IAT - Issued AT) in millisecondi
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7)) // Data di scadenza del token (Expiration Date) in millisecondi
-                .setSubject(String.valueOf(user.getId())) // Subject, ovvero a chi appartiene il token (Attenzione a non mettere info sensibili)
-                .signWith(getSigningKey()) // Firmo il token con algoritmo HMAC passandogli il SEGRETO
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7))
+                .setSubject(String.valueOf(user.getId()))
+                .signWith(getSigningKey())
                 .compact();
-        System.out.println("Generated Token: " + token); // Log del token generato
+        System.out.println("Generated Token: " + token);
         return token;
     }
 
@@ -38,10 +38,8 @@ public class JWTTools {
                     .setSigningKey(getSigningKey())
                     .build()
                     .parseClaimsJws(token);
-            // Il metodo .parseClaimsJws(token) mi lancerà delle eccezioni in caso di token scaduto o token manipolato
         } catch (Exception ex) {
             throw new UnauthorizedException("Problemi col token! Per favore effettua di nuovo il login!");
-            // Non importa quale eccezione verrà lanciata da .parse(), a me alla fine interessa che tutte come risultato abbiano 401
         }
     }
 
@@ -51,6 +49,6 @@ public class JWTTools {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
-        return claims.getSubject(); // Il subject è l'id dell'utente
+        return claims.getSubject();
     }
 }

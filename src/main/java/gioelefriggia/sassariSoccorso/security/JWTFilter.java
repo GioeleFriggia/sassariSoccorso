@@ -35,12 +35,13 @@ public class JWTFilter extends OncePerRequestFilter {
                 String userId = jwtTools.extractIdFromToken(accessToken);
                 User currentUser = usersDAO.findById(UUID.fromString(userId))
                         .orElseThrow(() -> new UsernameNotFoundException("User not found with ID: " + userId));
+
                 Authentication authentication = new UsernamePasswordAuthenticationToken(currentUser, null, currentUser.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             } catch (Exception ex) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.getWriter().write("Unauthorized: " + ex.getMessage());
-                return; // Stop further processing
+                return;
             }
         }
         filterChain.doFilter(request, response);
@@ -48,7 +49,6 @@ public class JWTFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        // Do not apply filter for login and registration endpoints
         return request.getServletPath().startsWith("/auth/login") || request.getServletPath().startsWith("/auth/register");
     }
 }

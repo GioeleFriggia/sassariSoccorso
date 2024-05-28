@@ -5,7 +5,6 @@ public class UnauthorizedException extends RuntimeException {
         super(message);
     }
 
-    // Aggiungi questo costruttore se vuoi passare anche l'eccezione
     public UnauthorizedException(String message, Throwable cause) {
         super(message, cause);
     }

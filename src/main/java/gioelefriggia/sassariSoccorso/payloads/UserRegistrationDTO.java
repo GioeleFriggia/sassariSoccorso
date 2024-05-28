@@ -14,5 +14,5 @@ public class UserRegistrationDTO {
     private String residence;
     private String city;
     private String membershipNumber;
-    private Role role; // Aggiungi il campo role
+    private Role role;
 }

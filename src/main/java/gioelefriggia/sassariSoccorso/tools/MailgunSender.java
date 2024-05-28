@@ -1,6 +1,5 @@
 package gioelefriggia.sassariSoccorso.tools;
 
-
 import gioelefriggia.sassariSoccorso.entities.User;
 import kong.unirest.HttpResponse;
 import kong.unirest.JsonNode;
@@ -29,5 +28,4 @@ public class MailgunSender {
 
         System.out.println(response.getBody());
     }
-
 }
